@@ -31,25 +31,26 @@ print(f"{len(mat_files)} available files")
 #%% Cases of study
 
 # Load data
-n_file = 0
+n_file = 0 # choosing an specific .mat file from the recording's folder
 data_rec = loadmat(mat_files[n_file])
 
 # Constants
 
-# Case of Study_N
-
+# Example of metrics calculations
 COS_F = UAM_descriptive("F",data_rec,"A")
 
-
+# Example of Pwer spectral density calcualtion
 COS_F.psd_plots(channel=5, scaling="spectrum", on_new_plot=True, f_min=40,f_max=2000, db_min=-10, db_max=50 )
 
-# COS_F.spectgram_plots(channel=5, scaling="spectrum", f_min=40,f_max=2000, db_min=-10, db_max=60 )
+# Example of Spectrogram calculations
+COS_F.spectgram_plots(channel=5, scaling="spectrum", f_min=40,f_max=2000, db_min=-10, db_max=60 )
 
+# Example of 1/3 octave band representation
 COS_F.oct_band_plots(channel=5, limits = [50, 2000])
 
 # %%Some figures of UAM.Metrics
 
-mic_number = 4 
+mic_number = 4 #As measurements are multichannel data, a simgle microhpne could be selected for ploting results.
 
 fig_name = "pressure"
 plt.figure(figsize=(4, 2))
@@ -97,6 +98,6 @@ plt.tight_layout()
 
 
 
-#Save the plot in SVG format
-fig_name = "1_3_oct_band"
-plt.savefig('saved_figures/'+f'{fig_name}.png', format='png', dpi=200)
+# Un comment for saving any plot in SVG format
+#fig_name = "1_3_oct_band"
+#plt.savefig('saved_figures/'+f'{fig_name}.png', format='png', dpi=200)
