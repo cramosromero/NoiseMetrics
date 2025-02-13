@@ -30,6 +30,31 @@ Usability.py : \
 This iscript present an example of using the class UAM for characterizing UAM noise measurements.
 The imputs are a 9-channel measurements .mat files contained in the the folder: "Drone_DATA_Measurements"
 
+## Some results
+### Pressure time-series
+ 
+![00 pressure](https://github.com/user-attachments/assets/a87b3a87-969c-4e61-a81b-7f03af1293a5)
+
+### Sound Pressurer Level
+
+![01 SPL_A](https://github.com/user-attachments/assets/c226b16d-8a74-40bd-90ff-c8569aa4ac24)
+   
+### Power Spectral Density
+
+![02 spectrum](https://github.com/user-attachments/assets/ef56331f-998f-4854-99f2-6941ee6b6344)
+   
+### Frequency band representation
+
+![03 bands](https://github.com/user-attachments/assets/0da526bd-70ec-4ed3-aa67-43a6406fb813)
+   
+### Spectrogram
+
+![04 spectrogram](https://github.com/user-attachments/assets/efb24596-e22d-4cef-80db-136f4b8d79d5)
+   
+### LAmax, LAeq, LAE
+
+![05 Leq_Lax_LAE](https://github.com/user-attachments/assets/d8e5a9cf-6962-4d10-88e8-d216e31d2f29)
+
 ## UAM measurements data description:
 Drone_DATA_Measurements folter contains two subfolders which could have more than one measurement of the same UAM operation. 
 
