@@ -64,7 +64,7 @@ plt.tight_layout()
 fig_name = "SPL_A"
 plt.figure(figsize=(4, 2))
 plt.plot(COS_F.time_metrics, COS_F.SPL[:,mic_number],'b')
-plt.plot(COS_F.time_vec, COS_F.DATA_acu[:,mic_number],'r')
+# plt.plot(COS_F.time_vec, COS_F.DATA_acu[:,mic_number],'r') #Comparison with SPL precalculated in Dewesoft.
 plt.title('SPL [A-weighted, fast]')
 plt.xlabel('Time [s]')
 plt.ylim(40,80)
