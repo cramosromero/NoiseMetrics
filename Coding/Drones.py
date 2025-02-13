@@ -37,7 +37,7 @@ class UAM_descriptive:
         
         self.num_channels, self.DATA_raw, self.DATA_acu, self.time_vec  = self.raw_and_spl()
         self.Filt_DATA_raw = self.p_t_W_() # weigthed time-series
-        self.SPL, self.time_metrics, self.Leq, self.Lmax, self.LE, self.L10, self.L50, self,L90 = self.metrics()
+        self.SPL, self.time_metrics, self.Leq, self.Lmax, self.LE, self.L10, self.L50, self.L90 = self.metrics()
 
     ####### Instance method for separate data_recs from multichannel pressure and SPL  
     ##################################################################################
@@ -109,13 +109,13 @@ class UAM_descriptive:
     ######## Instance method for calculating metrics from acoustic pressure time-series
     ####################################################################################
 
-    def metrics(self, t_int = 1):
+    def metrics(self, t_int = 0.125):
 
         """
         Parameters
         ----------
         t_int : float
-            Window size for Metrics calculations. The default is 0.5.
+            Window size for Metrics calculations. The default is 0.125 [s] for Fast time averaging.
         weight_curve : string
             If frequency filter is needeed. The default is "A".
 
