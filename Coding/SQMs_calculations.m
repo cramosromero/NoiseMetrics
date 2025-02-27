@@ -5,7 +5,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc; clear all; close all;
 
-
 %% Load Signal to be assessed (mono .wav file)
 base_path = cd;
 dir_ref_sounds = [base_path filesep 'UAM_ImaFUSA' filesep 'SQMsMatlab' filesep 'audio_files' filesep ];
@@ -142,10 +141,6 @@ fprintf('\t- 5th percentile value: %g (tu).\n',OUT_TONAL_ECMA_mono.T5);
 
 T5_hm = OUT_TONAL_ECMA_mono.T5;
 
-%% Printing SQMS vs time.
-sqm = OUT_LOUD_ECMA_mono;
-% plot input signal
-
 
 %% PsychoacousticAnnoyance Model Zwicker1999
 
@@ -166,7 +161,7 @@ PA_Di  = PsychoacousticAnnoyance_Di2016_from_percentile(N5_iso,... %5th percenti
 fprintf('\n Psychoacoustic Annoyance by Di Model: \n');     
 fprintf('\t- PA_Di: %g (nd).\n',PA_Di);
 %% PsychoacousticAnnoyance Model Boucher2024
-PA_Boucher = PsychoacousticAnnoyance_Boucher2024_from_percentile(N5_hm,...  %5th percentile Loudness ISO 532-1:2017      
+PA_Boucher = PsychoacousticAnnoyance_Boucher2024_from_percentile(N5_iso,...  %5th percentile Loudness ISO 532-1:2017      
                                                                  S5_din,... %5th percentile Sharpness_DIN45692_from_loudness
                                                                  R5_hm,...  %5th percentile Roughness_ECMA418_2
                                                                  F5, ...    %5th percentile FluctuationStrength_Osses2016
@@ -181,12 +176,10 @@ fprintf('\t- PA_Boucher: %g (nd).\n',PA_Boucher);
 
 % same calibration as DO_slm  in Loudness_ECMA418_2 :
 dBFS = 94; % a priori knowledge
-
 dBoffset = 0.93; % determined empirically on to obtain the same values as DEWESOFT
                  % with this implementation and the one in PsySound.
 calCoeff = 10.^((dBFS+dBoffset-93)/20);
 signal.signal = calCoeff*signal.signal; % same as: insig = setdbspl(insig,rmsdb(insig)+dBFS,'dboffset',94);
-
 
 % Target sampling rate
 Fs_target = 48000; 
