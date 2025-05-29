@@ -61,20 +61,20 @@ plt.ylabel('AMplitude [Pa]')
 plt.tight_layout()
 
 
-fig_name = "SPL_A"
-plt.figure(figsize=(4, 2))
-plt.plot(COS_F.time_metrics, COS_F.SPL[:,mic_number],'b')
-# plt.plot(COS_F.time_vec, COS_F.DATA_acu[:,mic_number],'r') #Comparison with SPL precalculated in Dewesoft.
-plt.title('SPL [A-weighted, fast]')
-plt.xlabel('Time [s]')
-plt.ylim(40,80)
-plt.ylabel('Amplitude [dBA]')
-plt.tight_layout()
+# fig_name = "SPL_A"
+# plt.figure(figsize=(4, 2))
+# plt.plot(COS_F.time_metrics, COS_F.SPL[:,mic_number],'b')
+# # plt.plot(COS_F.time_vec, COS_F.DATA_acu[:,mic_number],'r') #Comparison with SPL precalculated in Dewesoft.
+# plt.title('SPL [A-weighted, fast]')
+# plt.xlabel('Time [s]')
+# plt.ylim(40,80)
+# plt.ylabel('Amplitude [dBA]')
+# plt.tight_layout()
 
 
 fig_name = "Leq_Lax_LAE"
 fig,ax =plt.subplots(figsize=(6, 3))
-plt.plot(COS_F.time_metrics, COS_F.SPL[:,mic_number], color='gray')
+plt.plot(COS_F.time_metrics, COS_F.SPL[:,mic_number], color='blue')
 plt.axhline(COS_F.Leq[mic_number], color='g',linestyle='-.',  label = r'$LA_{eq}$')
 t_max = np.argmax(COS_F.SPL[:,mic_number])*COS_F.time_metrics[1]
 # Plot vertical lines at x=Lmax-10 
@@ -96,6 +96,26 @@ plt.ylim(40,85)
 plt.ylabel('Amplitude [dBA]')
 plt.tight_layout()
 
+# %% %HA People
+x_LAeq = np.linspace(50, 100, 100)
+HA_med_3kg = 100/(1+ np.exp(13.470 - 0.178 * x_LAeq))
+HA_civ_aircr = 100/(1+ np.exp(18.940 - 0.229 * x_LAeq)) 
+
+haLAeq_1 = 100/(1+ math.exp(13.470 - 0.178 * COS_F.Leq[mic_number]))
+haLAeq_2 = 100/(1+ math.exp(18.940 - 0.229 * COS_F.Leq[mic_number]))
+
+fig_name = "%HA"
+fig,ax =plt.subplots(figsize=(6, 3))
+plt.plot(x_LAeq, HA_med_3kg, '-k', label='Medium drone (3.0kg) by Gwak') # reference curve
+plt.plot(x_LAeq, HA_civ_aircr, '--k', label='Civil aircraft by Gwak') # reference curve
+plt.plot(COS_F.Leq[mic_number], haLAeq_1,'ob', label= 'UAS') # evaluated drone
+plt.plot(COS_F.Leq[mic_number], haLAeq_2,'ob') # evaluated drone
+plt.axhline(50, color='gray',linestyle=':',  label = '50%') # reference at 50%
+plt.legend(fontsize=8,ncol=1)
+plt.title('%HA curves for the noise of vehicles')
+plt.xlabel(r'$LA_{eq}$')
+plt.ylabel('%HA')
+plt.tight_layout()
 
 
 # Un comment for saving any plot in SVG format
