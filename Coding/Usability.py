@@ -113,7 +113,7 @@ plt.plot(COS_F.Leq[mic_number], haLAeq_2,'ob') # evaluated drone
 plt.axhline(50, color='gray',linestyle=':',  label = '50%') # reference at 50%
 plt.legend(fontsize=8,ncol=1)
 plt.title('%HA curves for the noise of vehicles')
-plt.xlabel(r'$LA_{eq}$')
+plt.xlabel(r'$LA_{eq} [dB]$')
 plt.ylabel('%HA')
 plt.tight_layout()
 
