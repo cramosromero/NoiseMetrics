@@ -33,49 +33,42 @@ fprintf('\t- 5th percentile value: %g (sone).\n', OUT_LOUD_ISO_mono.N5);
 
 N5_iso = OUT_LOUD_ISO_mono.N5;
 
-% display plots
+% --- Figure : Instantaneous Specific Loudness ---
 figure();
-
-subplot1 = subplot(2,1,1);
-[xx,yy]=meshgrid(OUT_LOUD_ISO_mono.time, OUT_LOUD_ISO_mono.barkAxis);
-pcolor(xx,yy,OUT_LOUD_ISO_mono.InstantaneousSpecificLoudness');
-shading interp; colorbar; axis tight;
+[xx, yy] = meshgrid(OUT_LOUD_ISO_mono.time, OUT_LOUD_ISO_mono.barkAxis);
+pcolor(xx, yy, OUT_LOUD_ISO_mono.InstantaneousSpecificLoudness');
+shading interp; 
+colorbar; 
+axis tight;
 
 title('Instantaneous specific loudness');
-xlabel('Time, [s]');
-ylabel(colorbar, "Specific Loudness" + string(newline) + "N''[sone/Bark]");
-%freq labels
-        ax = gca;
-        set(ax,'YTick',[0 4 8 12 16 20 24]);
-        ylabel('Critical band, $z$ (Bark)');
+xlabel('Time [s]');
+ylabel('Critical band, $z$ (Bark)', 'Interpreter', 'latex');
 
-        set(gcf,'color','w');
+cb = colorbar;
+ylabel(cb, "Specific Loudness" + string(newline) + "N'' [sone/Bark]");
 
-subplot2 = subplot(2,1,2);
-% Create axes
-plot(OUT_LOUD_ISO_mono.time,OUT_LOUD_ISO_mono.InstantaneousLoudness, 'DisplayName', "Time-" + string(newline) + "dependent")
-title('Instantaneous loudness')
-xlabel('Time [s]')
-ylabel('Loudness[N] by ISO532-1')
-box(subplot2,'on');
-grid(subplot2,'on');
-hold(subplot2,'off');
-% Set the remaining axes properties
-set(subplot2,'GridLineStyle',':','GridLineWidth',0.25);
-legend('Location', 'eastoutside', 'FontSize', 7);
+ax = gca;
+set(ax, 'YTick', [0 4 8 12 16 20 24]);
 
-% Adjust subplot positions for better alignment
-linkaxes([subplot1, subplot2], 'x');
+set(gcf, 'Color', 'w');
 
-% Get original position of subplot1
-pos1 = get(subplot1, 'Position'); 
+% --- Figure : Instantaneous Loudness ---
+figure();
+plot(OUT_LOUD_ISO_mono.time, OUT_LOUD_ISO_mono.InstantaneousLoudness, 'DisplayName', "Time-dependent");
+title('Instantaneous loudness');
+xlabel('Time [s]');
+ylabel('Loudness [sone] by ISO532-1');
+box on;
+grid on;
 
-% Adjust only subplot2 to align with subplot1 in x direction
-pos2 = get(subplot2, 'Position');
-pos2(1) = pos1(1);  % Align left edge
-pos2(3) = pos1(3);  % Match width
-set(subplot2, 'Position', pos2);
+% Customize grid
+set(gca, 'GridLineStyle', ':', 'GridLineWidth', 0.25);
+legend();
+set(gcf, 'Color', 'w');
 
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous loudness ISO.eps');
 
 %% Compute Loudness ECMA418_2 (mono signal)
 
@@ -89,7 +82,23 @@ fprintf('\t- Overall loudness value: %g (sone).\n', OUT_LOUD_ECMA_mono.loudnessP
 fprintf('\t- 5th percentile value: %g (sone).\n', OUT_LOUD_ECMA_mono.N5);
 
 N5_hm = OUT_LOUD_ECMA_mono.N5;
-% display plots activated
+
+% --- Figure : Instantaneous Loudness ECMA---
+figure();
+plot(OUT_LOUD_ECMA_mono.timeOut, OUT_LOUD_ECMA_mono.loudnessTDep, 'DisplayName', "Time-dependent");
+title('Instantaneous loudness');
+xlabel('Time [s]');
+ylabel('Loudness [sone] by ECMA418-2');
+box on;
+grid on;
+
+% Customize grid
+set(gca, 'GridLineStyle', ':', 'GridLineWidth', 0.25);
+legend();
+set(gcf, 'Color', 'w');
+
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous loudness ECMA.eps');
 %% Compute Sharpness (according to DIN 45692)  (time-varying) from loudness input 
 OUT_SHARP_DIN_L = Sharpness_DIN45692_from_loudness(OUT_LOUD_ISO_mono.InstantaneousSpecificLoudness,...  % input (time-varying) specific loudness
                                                           'DIN45692',...  % type of weighting function used for sharpness calculation
@@ -105,7 +114,7 @@ fprintf('\t- 5th percentile value: %g (acum).\n',OUT_SHARP_DIN_L.S5);
 
 S5_din = OUT_SHARP_DIN_L.S5;
 
-% display plots
+%--- Figure: Sharpness
 figure()
 subplot1 = subplot(1,1,1);
 plot(OUT_SHARP_DIN_L.time,OUT_SHARP_DIN_L.InstantaneousSharpness);
@@ -116,6 +125,8 @@ set(subplot1,'GridLineStyle','--','XGrid','on','YGrid','on','GridLineWidth', 0.2
 box(subplot1,'on')
 set(gcf,'color','w')
 
+     % Save figure as EPS
+    print('-depsc2', 'Instantaneous sharpness DIN-N-ISO.eps');
 %% Roughness (according to Daniel & Weber model)
 
 OUT_ROUGH_DAW_mono = Roughness_Daniel1997(signal.signal, signal.fs,...  % input signal and sampling freq.
@@ -129,54 +140,51 @@ fprintf('\t- 5th percentile value: %g (asper).\n',OUT_ROUGH_DAW_mono.R5);
 
 R5_dw = OUT_ROUGH_DAW_mono.R5;
 
-figure()
+% --- Figure : Instantaneous Specific Roughness ---
+figure();
+[xx, yy] = meshgrid(OUT_ROUGH_DAW_mono.time, OUT_ROUGH_DAW_mono.barkAxis);
+pcolor(xx, yy, OUT_ROUGH_DAW_mono.InstantaneousSpecificRoughness);
+shading interp;
+colorbar;
+axis tight;
 
-subplot1 = subplot(2,1,1);
-[xx,yy]=meshgrid(OUT_ROUGH_DAW_mono.time, OUT_ROUGH_DAW_mono.barkAxis);
-pcolor(xx,yy,OUT_ROUGH_DAW_mono.InstantaneousSpecificRoughness);
-shading interp; colorbar; axis tight;
 title('Instantaneous specific roughness');
-xlabel('Time, [s]');
-ylabel(colorbar, "Specific Roughness" + string(newline) + "R''[asper/Bark]");
-%freq labels
-        ax = gca;
-        set(ax,'YTick',[0 4 8 12 16 20 24]);
-        ylabel('Critical band, $z$ (Bark)');
+xlabel('Time [s]');
+ylabel('Critical band, $z$ (Bark)', 'Interpreter', 'latex');
 
-        set(gcf,'color','w');
+cb = colorbar;
+ylabel(cb, "Specific Roughness" + string(newline) + "R'' [asper/Bark]");
 
-subplot2 = subplot(2,1,2);
-plot(OUT_ROUGH_DAW_mono.time, OUT_ROUGH_DAW_mono.InstantaneousRoughness, 'DisplayName', "Time-" + string(newline) + "dependent")
-title('Instantaneous roughness','Interpreter','Latex')
-xlabel('Time [s]')
-ylabel('Rougness R[asper] by Daniel1997')
-set(subplot2,'GridLineStyle','--','XGrid','on','YGrid','on','GridLineWidth', 0.25)
-box(subplot2,'on')
-grid(subplot2,'on');
+ax = gca;
+set(ax, 'YTick', [0 4 8 12 16 20 24]);
+set(gcf, 'Color', 'w');
 
-% Set the remaining axes properties
-set(subplot2,'GridLineStyle',':','GridLineWidth',0.25);
-legend('Location', 'eastoutside', 'FontSize', 7);
+% --- Figure: Instantaneous Roughness ---
+figure();
+plot(OUT_ROUGH_DAW_mono.time, OUT_ROUGH_DAW_mono.InstantaneousRoughness, ...
+     'DisplayName', 'Time-dependent');
 
-% Adjust subplot positions for better alignment
-linkaxes([subplot1, subplot2], 'x');
+title('Instantaneous roughness', 'Interpreter', 'latex');
+xlabel('Time [s]');
+ylabel('Roughness R [asper] by Daniel1997');
 
-% Get original position of subplot1
-pos1 = get(subplot1, 'Position'); 
+ax = gca;
+set(ax, 'GridLineStyle', '--', 'XGrid', 'on', 'YGrid', 'on', 'GridLineWidth', 0.25);
+box on;
+grid on;
 
-% Adjust only subplot2 to align with subplot1 in x direction
-pos2 = get(subplot2, 'Position');
-pos2(1) = pos1(1);  % Align left edge
-pos2(3) = pos1(3);  % Match width
-set(subplot2, 'Position', pos2);
-hold(subplot2,'off');
+legend();
+set(gcf, 'Color', 'w');
+
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous roughness Daniel.eps');
 
 %% Compute Roughness ECMA418_2 (mono signal)
 % time_skip = 350e-3;% time_skip, in seconds for statistical calculations (default: 304ms - avoids transient responses of the digital filters)
 OUT_ROUGH_ECMA_mono = Roughness_ECMA418_2(signal.signal, signal.fs,... % input signal and sampling freq.
                                             fieldtype,... % % string (default: 'free-frontal'; or 'diffuse')
                                             3.5,... % time_skip, in seconds for statistical calculations
-                                            1); % show results, 'false' (disable, default value) or 'true' (enable)  
+                                            0); % show results, 'false' (disable, default value) or 'true' (enable)  
                               
 fprintf('\nRoughness (ECMA-418-2:2024 - Hearing Model of Sottek): \n');
 fprintf('Reference signal (60 dB 1 kHz tone 100 %% modulated at 70 Hz)\n');
@@ -184,6 +192,23 @@ fprintf('\t- Mean roughness value: %g (asper).\n',OUT_ROUGH_ECMA_mono.Rmean);
 fprintf('\t- 5th percentile value: %g (asper).\n',OUT_ROUGH_ECMA_mono.R5);
 
 R5_hm = OUT_ROUGH_ECMA_mono.R5;
+
+% --- Figure : Instantaneous Roughness ECAM---
+figure();
+plot(OUT_ROUGH_ECMA_mono.timeOut, OUT_ROUGH_ECMA_mono.roughnessTDep, 'DisplayName', "Time-dependent");
+title('Instantaneous roughness');
+xlabel('Time [s]');
+ylabel('Roughness [asper] by ECMA418-2');
+box on;
+grid on;
+
+% Customize grid
+set(gca, 'GridLineStyle', ':', 'GridLineWidth', 0.25);
+legend();
+set(gcf, 'Color', 'w');
+
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous roughness ECMA.eps');
 
 %% Compute Sharpness (mono signal) (time-varying)
 
@@ -203,6 +228,7 @@ fprintf('\t- 5th percentile value: %g (acum).\n',OUT_SHARP_DIN_mono.S5);
 
 S5_din = OUT_SHARP_DIN_mono.S5;
 
+% --- Figure : Instantaneous Sharpness Din---
 figure()
 subplot1 = subplot(1,1,1);
 plot(OUT_SHARP_DIN_mono.time, OUT_SHARP_DIN_mono.InstantaneousSharpness);
@@ -212,6 +238,9 @@ ylabel('Sharpness, S [acum] by DIN 45692');
 set(gcf,'color','w')
 set(subplot1,'GridLineStyle','--','XGrid','on','YGrid','on','GridLineWidth', 0.25)
 box(subplot1,'on')
+
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous sharpnesss DIN.eps');
 
 %% Compute Fluctuation strength (mono signal) Osses
 
@@ -227,45 +256,41 @@ fprintf('\t- 5th percentile value: %g (vacil).\n',OUT_FLUST_OSS_mono.FS5);
 
 F5 = OUT_FLUST_OSS_mono.FS5;
 
-figure(); % plot fig in full screen
+% --- Figure : Instantaneous Specific Fluctuation Strength ---
+figure(); % Optional: set(gcf, 'Units', 'normalized', 'OuterPosition', [0 0 1 1]); % Full screen
+[xx, yy] = meshgrid(OUT_FLUST_OSS_mono.time, OUT_FLUST_OSS_mono.barkAxis);
+pcolor(xx, yy, OUT_FLUST_OSS_mono.InstantaneousSpecificFluctuationStrength');
+shading interp;
+colorbar;
+axis tight;
+set(gca, 'YDir', 'normal');
 
-    % Specific fluctuation strength spectrogram
-subplot1 = subplot(2,1,1);
-[xx,yy]=meshgrid(OUT_FLUST_OSS_mono.time,OUT_FLUST_OSS_mono.barkAxis); 
-pcolor(xx,yy,OUT_FLUST_OSS_mono.InstantaneousSpecificFluctuationStrength'); 
-shading interp; colorbar; axis tight; 
-set(gca,'YDir','normal');
-title('Instantaneous specific Fluctuation strength');
+title('Instantaneous specific fluctuation strength');
 xlabel('Time [s]');
-ylabel('Critical band,[Bark]');
-ylabel(colorbar, "Specific Fluctuation strength" + string(newline) + "F'' [vacil/Bark]");
-set(gcf,'color','w')
+ylabel('Critical band, [Bark]');
+cb = colorbar;
+ylabel(cb, "Specific Fluctuation Strength" + string(newline) + "F'' [vacil/Bark]");
 
-    % Time-varying Fluctuation Strength
-subplot2 = subplot(2,1,2);
-plot(OUT_FLUST_OSS_mono.time,OUT_FLUST_OSS_mono.InstantaneousFluctuationStrength,'r-', 'DisplayName', "Time-" + string(newline) + "dependent");
-title ('Instantaneous fluctuation strength');
+set(gcf, 'Color', 'w');
+
+% --- Figure : Instantaneous Fluctuation Strength Time Series ---
+figure(); % Optional: set(gcf, 'Units', 'normalized', 'OuterPosition', [0 0 1 1]);
+plot(OUT_FLUST_OSS_mono.time, OUT_FLUST_OSS_mono.InstantaneousFluctuationStrength, ...
+     'r-', 'DisplayName', 'Time-dependent');
+
+title('Instantaneous fluctuation strength');
 xlabel('Time [s]');
-ylabel('Fluctuation strength,F [vacil]');
-box(subplot2,'on');
-grid(subplot2,'on');
-hold(subplot2,'off');
-% Set the remaining axes properties
-set(subplot2,'GridLineStyle',':','GridLineWidth',0.25);
-legend('Location', 'eastoutside', 'FontSize', 7);
+ylabel('Fluctuation strength, F [vacil]');
 
-% Adjust subplot positions for better alignment
-linkaxes([subplot1, subplot2], 'x');
+ax = gca;
+set(ax, 'GridLineStyle', ':', 'GridLineWidth', 0.25, 'XGrid', 'on', 'YGrid', 'on');
+box on;
+legend();
 
-% Get original position of subplot1
-pos1 = get(subplot1, 'Position'); 
+set(gcf, 'Color', 'w');
 
-% Adjust only subplot2 to align with subplot1 in x direction
-pos2 = get(subplot2, 'Position');
-pos2(1) = pos1(1);  % Align left edge
-pos2(3) = pos1(3);  % Match width
-set(subplot2, 'Position', pos2);
-
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous fluctuation strength Osses.eps');
 
 %% Compute Tonality Aures (mono signal)
 
@@ -281,6 +306,7 @@ fprintf('\t- 5th percentile value: %g (t.u.).\n',OUT_TONAL_AURES_mono.K5);
 
 T5_aur = OUT_TONAL_AURES_mono.K5;
 
+% --- Figure : Instantaneous Tonality Aures ---
 figure();
 subplot1 = subplot(1,1,1);
 plot(OUT_TONAL_AURES_mono.time, OUT_TONAL_AURES_mono.InstantaneousTonality);
@@ -290,12 +316,14 @@ ylabel('Tonality, K [tu] by Aures');
 set(subplot1,'GridLineStyle','--','XGrid','on','YGrid','on','GridLineWidth', 0.25)
 box(subplot1,'on')
 set(gcf,'color','w')
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous Tonality Aures.eps');
 
 %% Compute Tonality ECMA418_2 (mono signal)
 OUT_TONAL_ECMA_mono = Tonality_ECMA418_2(signal.signal, signal.fs,... % input signal and sampling freq.
                                             fieldtype,... % string (default: 'free-frontal'; or 'diffuse')
                                             3.5,... % time_skip, in seconds for level (stationary signals) and statistics (stationary and time-varying signals) calculations
-                                            1); % show results, 'false' (disable, default value) or 'true' (enable)
+                                            0); % show results, 'false' (disable, default value) or 'true' (enable)
                  
 fprintf('\nTonality (ECMA-418-2:2024 - Hearing Model of Sottek): \n');
 fprintf('Reference signal  (1-kHz pure tone with 40 dBSPL)\n');
@@ -304,6 +332,22 @@ fprintf('\t- 5th percentile value: %g (tu).\n',OUT_TONAL_ECMA_mono.T5);
 
 T5_hm = OUT_TONAL_ECMA_mono.T5;
 
+% --- Figure : Instantaneous Roughness ECAM---
+figure();
+plot(OUT_TONAL_ECMA_mono.timeOut, OUT_TONAL_ECMA_mono.tonalityTDep, 'DisplayName', "Time-dependent");
+title('Instantaneous tonality');
+xlabel('Time [s]');
+ylabel('Roughness [asper] by ECMA418-2');
+box on;
+grid on;
+
+% Customize grid
+set(gca, 'GridLineStyle', ':', 'GridLineWidth', 0.25);
+legend();
+set(gcf, 'Color', 'w');
+
+    % Save figure as EPS
+    print('-depsc2', 'Instantaneous tonality ECMA.eps');
 
 %% PsychoacousticAnnoyance Model Zwicker1999
 
@@ -362,8 +406,6 @@ EPNL = EPNL_FAR_Part36(signal.signal, signal.fs,... % input signal and sampling 
                        threshold,... % threshold value used to calculate the PNLT decay from PNLTM during the calculation of the duration correction
                        show);
 
-
-
 %% Detectability and Discounted sound levels Lotinga_2025
 base_path = cd;
 dir_ref_sounds = [base_path filesep 'SQMsMatlab' filesep 'audio_files' filesep];
@@ -377,5 +419,9 @@ Masker = 'A1_CALBIN_Pa.wav';
 % detectDiscount = acousticDetectDiscount(signalTarget, sampleRateTarget, signalMasker,...
 %                                                  sampleRateMasker, [1,20],1, 1,...
 %                                                  0.5, [20,20000], 1);
+
 detectDiscount = acousticDetectDiscount_last(signalTarget, sampleRateTarget, signalMasker, sampleRateMasker, ...
-    1, 1, [0.5, 0.5], 0.5, [20,20e3], true);
+                                              1, 1, [0.5, 0.5], 0.5, [20,20e3], 1);
+
+% Save figure as EPS
+    print('-depsc2', 'Discounted LAE.eps');
