@@ -74,5 +74,6 @@ hh:      Operational direction respect to wind (uw) upwind, (nw) no-wind\
 
 > Drone noise measurements were obtained as described in https://doi.org/10.1016/j.ast.2023.108537
 > Ramos-Romero, C., Green, N., Torija, A. J., & Asensio, C. (2023). On-field noise measurements and acoustic characterisation of multi-rotor small unmanned aerial systems. Aerospace Science and Technology, 141, 108537.
+
 > Sound quality metrics were calculated by SQUAT  in https://doi.org/10.5281/zenodo.7934709 https://github.com/ggrecow/SQAT
 > Felix Greco, G., Merino-Martínez, R., & Osses, A. (2023). SQAT: a sound quality analysis toolbox for MATLAB. Zenodo.
