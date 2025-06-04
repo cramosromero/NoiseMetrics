@@ -10,6 +10,7 @@ from pathlib import Path
 from scipy.io import loadmat
 import numpy as np
 from Drones import UAM_descriptive 
+import math
 
 
 #%% DATA directories
