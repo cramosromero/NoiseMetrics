@@ -24,7 +24,7 @@ data_path = "../../Drone_DATA_Measurements/"
 forder_list = ["Ed_M3_10_F05_Y_W_134351_uw",
                "Ed_M3_10_HH_N_C_122827_nw"]
 
-ope = forder_list[1]
+ope = forder_list[0]
 
 file_path = Path(data_path + ope) # Ful Read Recorded data 
 # file_path = Path(data_path + forder_list[1]) # Ful Read Recorded data
@@ -44,8 +44,8 @@ data_rec = loadmat(mat_files[n_file])
 # Constants
 
 # Case of Study_N
-
-COS_F = UAM_descriptive("F",data_rec,"A",t_value=0.125)
+operation = ID[9:10] # flyover or hovering
+COS_F = UAM_descriptive(operation,data_rec,"A",t_value=0.125)
 
 # %%Some figures of UAM.Metrics
 fig_name = "spectrum"
@@ -110,7 +110,7 @@ plt.tight_layout()
 plt.savefig(f"{fig_name}{ope[9:10]}"+".eps", format='eps', dpi=300, bbox_inches='tight')
 
 # %% %HA People
-if ope[9:10] == 'H':
+if operation == 'H':
     
     x_LAE = np.linspace(50, 100, 100)
     #Courves as reference
@@ -121,11 +121,11 @@ if ope[9:10] == 'H':
     HA_El = 100/(1+ np.exp(-0.116 *(x_LAE-92.2)))
     
     #assessed UAS
-    haLAE_D1 = 100/(1+ math.exp(-0.168*(COS_F.LE[mic_number]-82.8)))
-    haLAE_D2 = 100/(1+ math.exp(-0.152*(COS_F.LE[mic_number]-78.9)))
-    haLAE_D3 = 100/(1+ math.exp(-0.138*(COS_F.LE[mic_number]-77.4)))
-    haLAE_D4 = 100/(1+ math.exp(-0.158*(COS_F.LE[mic_number]-81.8)))
-    haLAE_El = 100/(1+ math.exp(-0.116*(COS_F.LE[mic_number]-92.2)))
+    # haLAE_D1 = 100/(1+ math.exp(-0.168*(COS_F.LE[mic_number]-82.8)))
+    # haLAE_D2 = 100/(1+ math.exp(-0.152*(COS_F.LE[mic_number]-78.9)))
+    # haLAE_D3 = 100/(1+ math.exp(-0.138*(COS_F.LE[mic_number]-77.4)))
+    # haLAE_D4 = 100/(1+ math.exp(-0.158*(COS_F.LE[mic_number]-81.8)))
+    # haLAE_El = 100/(1+ math.exp(-0.116*(COS_F.LE[mic_number]-92.2)))
 
     
     fig_name = "%HA"
@@ -137,11 +137,12 @@ if ope[9:10] == 'H':
     plt.plot(x_LAE, HA_El, '--k',  label='Helicopter 1 by Aalmoes-EASA') # reference curve
     
     
-    plt.plot(COS_F.LE[mic_number], haLAE_D1,'ob', label= 'UAS') # evaluated drone
-    plt.plot(COS_F.LE[mic_number], haLAE_D2,'ob') # evaluated drone
-    plt.plot(COS_F.LE[mic_number], haLAE_D3,'ob') # evaluated drone
-    plt.plot(COS_F.LE[mic_number], haLAE_D4,'ob') # evaluated drone
-    plt.plot(COS_F.LE[mic_number], haLAE_El,'ob') # evaluated drone
+    plt.plot(COS_F.LE[mic_number], 50,'ob', label= 'UAS') # evaluated drone
+    # plt.plot(COS_F.LE[mic_number], haLAE_D1,'ob', label= 'UAS') # evaluated drone
+    # plt.plot(COS_F.LE[mic_number], haLAE_D2,'ob') # evaluated drone
+    # plt.plot(COS_F.LE[mic_number], haLAE_D3,'ob') # evaluated drone
+    # plt.plot(COS_F.LE[mic_number], haLAE_D4,'ob') # evaluated drone
+    # plt.plot(COS_F.LE[mic_number], haLAE_El,'ob') # evaluated drone
 
     plt.axhline(50, color='green',linestyle=':',  label = '50%') # reference at 50%
     plt.legend(fontsize=8,ncol=1)
@@ -150,7 +151,7 @@ if ope[9:10] == 'H':
     plt.ylabel('%HA')
     plt.tight_layout()
     
-elif ope[9:10] == 'F':
+elif operation == 'F':
     
     x_LAeq = np.linspace(50, 100, 100)
     #Courves as reference
@@ -159,9 +160,9 @@ elif ope[9:10] == 'F':
     HA_civ_aircr = 100/(1+ np.exp(18.940 - 0.229 * x_LAeq)) 
     
     #assessed UAS
-    haLAeq_1 = 100/(1+ math.exp(13.470 - 0.178 * COS_F.Leq[mic_number]))
-    haLAeq_2 = 100/(1+ math.exp(12.184- 0.165 * COS_F.Leq[mic_number]))
-    haLAeq_3 = 100/(1+ math.exp(18.940 - 0.229 * COS_F.Leq[mic_number]))
+    # haLAeq_1 = 100/(1+ math.exp(13.470 - 0.178 * COS_F.Leq[mic_number]))
+    # haLAeq_2 = 100/(1+ math.exp(12.184- 0.165 * COS_F.Leq[mic_number]))
+    # haLAeq_3 = 100/(1+ math.exp(18.940 - 0.229 * COS_F.Leq[mic_number]))
     
     fig_name = "%HA"
     fig,ax =plt.subplots(figsize=(6, 3))
@@ -169,9 +170,10 @@ elif ope[9:10] == 'F':
     plt.plot(x_LAeq, HA_large, '-.k', label='Large drone by Gwak') # reference curve
     plt.plot(x_LAeq, HA_civ_aircr, '--k', label='Civil aircraft by Gwak') # reference curve
     
-    plt.plot(COS_F.Leq[mic_number], haLAeq_1,'ob', label= 'UAS') # evaluated drone
-    plt.plot(COS_F.Leq[mic_number], haLAeq_2,'ob') # evaluated drone
-    plt.plot(COS_F.Leq[mic_number], haLAeq_3,'ob') # evaluated drone
+    plt.plot(COS_F.Leq[mic_number], 50,'ob', label= 'UAS') # evaluated drone
+    # plt.plot(COS_F.Leq[mic_number], haLAeq_1,'ob') # evaluated drone
+    # plt.plot(COS_F.Leq[mic_number], haLAeq_2,'ob') # evaluated drone
+    # plt.plot(COS_F.Leq[mic_number], haLAeq_3,'ob') # evaluated drone
     
     plt.axhline(50, color='green',linestyle=':',  label = '50%') # reference at 50%
     plt.legend(fontsize=8,ncol=1)
