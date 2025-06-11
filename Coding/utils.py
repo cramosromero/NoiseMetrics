@@ -6,6 +6,8 @@ import scipy.signal as ss
 from matplotlib import pyplot as plt
 import matplotlib.ticker as ticker
 import PyOctaveBand 
+import soundfile as sf
+import resampy
 
 """
 Created on Tue Jan 28 16:52:22 2025
@@ -245,3 +247,15 @@ def n_octave_freq_bands(signal, sample_rate, n_frac, limits):
     plt.tight_layout()
         
     return splb, freqb
+
+###############################################
+###############################################
+def wav_generation (multichannel_data_raw, name_file, channel, org_fs, new_fs=44100):
+    data = multichannel_data_raw[:,channel]
+    samp_rate = org_fs
+    if org_fs != new_fs:
+        # Downsample the audio data
+        data = resampy.resample(data, org_fs, new_fs)
+        samp_rate =  new_fs
+
+    sf.write(name_file+f"micro{channel+1}.wav", data, samp_rate)

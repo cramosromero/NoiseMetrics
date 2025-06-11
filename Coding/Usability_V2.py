@@ -23,8 +23,9 @@ data_path = "../../Drone_DATA_Measurements/"
 ## Read the file for evaluation
 forder_list = ["Ed_M3_10_F05_Y_W_134351_uw",
                "Ed_M3_10_HH_N_C_122827_nw"]
-
-ope = forder_list[0]
+"""O for Flyover
+   1 for Hovering"""
+ope = forder_list[1]
 
 file_path = Path(data_path + ope) # Ful Read Recorded data 
 # file_path = Path(data_path + forder_list[1]) # Ful Read Recorded data
@@ -110,7 +111,7 @@ plt.tight_layout()
 plt.savefig(f"{fig_name}{ope[9:10]}"+".eps", format='eps', dpi=300, bbox_inches='tight')
 
 # %% %HA People
-if operation == 'H':
+if operation == 'F':
     
     x_LAE = np.linspace(50, 100, 100)
     #Courves as reference
@@ -118,13 +119,13 @@ if operation == 'H':
     HA_D2 = 100/(1+ np.exp(-0.152 *(x_LAE-78.9)))
     HA_D3 = 100/(1+ np.exp(-0.138 *(x_LAE-77.4)))
     HA_D4 = 100/(1+ np.exp(-0.158 *(x_LAE-81.8)))
-    HA_El = 100/(1+ np.exp(-0.116 *(x_LAE-92.2)))
+    # HA_El = 100/(1+ np.exp(-0.116 *(x_LAE-92.2)))
     
     #assessed UAS
-    # haLAE_D1 = 100/(1+ math.exp(-0.168*(COS_F.LE[mic_number]-82.8)))
-    # haLAE_D2 = 100/(1+ math.exp(-0.152*(COS_F.LE[mic_number]-78.9)))
-    # haLAE_D3 = 100/(1+ math.exp(-0.138*(COS_F.LE[mic_number]-77.4)))
-    # haLAE_D4 = 100/(1+ math.exp(-0.158*(COS_F.LE[mic_number]-81.8)))
+    haLAE_D1 = 100/(1+ math.exp(-0.168*(COS_F.LE[mic_number]-82.8)))
+    haLAE_D2 = 100/(1+ math.exp(-0.152*(COS_F.LE[mic_number]-78.9)))
+    haLAE_D3 = 100/(1+ math.exp(-0.138*(COS_F.LE[mic_number]-77.4)))
+    haLAE_D4 = 100/(1+ math.exp(-0.158*(COS_F.LE[mic_number]-81.8)))
     # haLAE_El = 100/(1+ math.exp(-0.116*(COS_F.LE[mic_number]-92.2)))
 
     
@@ -134,52 +135,58 @@ if operation == 'H':
     plt.plot(x_LAE, HA_D2, ':k', label='Drone 2 by Aalmoes-EASA') # reference curve
     plt.plot(x_LAE, HA_D3, '-.k', label='Drone 3 by Aalmoes-EASA') # reference curve
     plt.plot(x_LAE, HA_D4, linestyle=(0, (3, 5, 1, 5, 1, 5)) , color ='k', label='Drone 4 by Aalmoes-EASA') # reference curve
-    plt.plot(x_LAE, HA_El, '--k',  label='Helicopter 1 by Aalmoes-EASA') # reference curve
+    # plt.plot(x_LAE, HA_El, '--k',  label='Helicopter 1 by Aalmoes-EASA') # reference curve
     
+    y_min = haLAE_D1 # Drone 3 line
+    y_max = haLAE_D3 # Drone 1 line
+    y_mean = (y_max-y_min)*0.5 + y_min
     
-    plt.plot(COS_F.LE[mic_number], 50,'ob', label= 'UAS') # evaluated drone
-    # plt.plot(COS_F.LE[mic_number], haLAE_D1,'ob', label= 'UAS') # evaluated drone
-    # plt.plot(COS_F.LE[mic_number], haLAE_D2,'ob') # evaluated drone
-    # plt.plot(COS_F.LE[mic_number], haLAE_D3,'ob') # evaluated drone
-    # plt.plot(COS_F.LE[mic_number], haLAE_D4,'ob') # evaluated drone
-    # plt.plot(COS_F.LE[mic_number], haLAE_El,'ob') # evaluated drone
-
     plt.axhline(50, color='green',linestyle=':',  label = '50%') # reference at 50%
+    plt.errorbar(COS_F.LE[mic_number], y_mean, yerr=y_max-y_mean, 
+                 fmt='o',color='blue', capsize=5, capthick=2, label = r'estim. %HA')
+
     plt.legend(fontsize=8,ncol=1)
-    plt.title('%HA curves for the noise of vehicles')
-    plt.xlabel(r'$LA_{eq}$')
+    plt.title('%HA curves for Drones in overfligth')
+    plt.xlabel(r'$LAE$')
     plt.ylabel('%HA')
+    plt.grid(True)
     plt.tight_layout()
     
-elif operation == 'F':
+elif operation == 'H':
     
     x_LAeq = np.linspace(50, 100, 100)
     #Courves as reference
-    HA_med_3kg = 100/(1+ np.exp(13.470 - 0.178 * x_LAeq))
-    HA_large = 100/(1+ np.exp(12.184 - 0.165 * x_LAeq))
-    HA_civ_aircr = 100/(1+ np.exp(18.940 - 0.229 * x_LAeq)) 
+    HA_small   =   100/(1+ np.exp(13.512 - 0.170 * x_LAeq))
+    HA_med_3kg =   100/(1+ np.exp(13.470 - 0.178 * x_LAeq))
+    HA_large   =     100/(1+ np.exp(12.184 - 0.165 * x_LAeq))
+    # HA_civ_aircr = 100/(1+ np.exp(18.940 - 0.229 * x_LAeq)) 
     
     #assessed UAS
-    # haLAeq_1 = 100/(1+ math.exp(13.470 - 0.178 * COS_F.Leq[mic_number]))
-    # haLAeq_2 = 100/(1+ math.exp(12.184- 0.165 * COS_F.Leq[mic_number]))
+    haLAEq_0 = 100/(1+ np.exp(13.512 - 0.170 *  COS_F.Leq[mic_number]))
+    haLAeq_1 = 100/(1+ math.exp(13.470 - 0.178 * COS_F.Leq[mic_number]))
+    haLAeq_2 = 100/(1+ math.exp(12.184 - 0.165 * COS_F.Leq[mic_number]))
     # haLAeq_3 = 100/(1+ math.exp(18.940 - 0.229 * COS_F.Leq[mic_number]))
     
     fig_name = "%HA"
     fig,ax =plt.subplots(figsize=(6, 3))
-    plt.plot(x_LAeq, HA_med_3kg, '-k', label='Medium drone (3.0kg) by Gwak') # reference curve
+    plt.plot(x_LAeq, HA_small,':k', label='small drone by Gwak')
+    plt.plot(x_LAeq, HA_med_3kg, '-.k', label='Medium drone (3.0kg) by Gwak') # reference curve
     plt.plot(x_LAeq, HA_large, '-.k', label='Large drone by Gwak') # reference curve
-    plt.plot(x_LAeq, HA_civ_aircr, '--k', label='Civil aircraft by Gwak') # reference curve
+    # plt.plot(x_LAeq, HA_civ_aircr, '--k', label='Civil aircraft by Gwak') # reference curve
     
-    plt.plot(COS_F.Leq[mic_number], 50,'ob', label= 'UAS') # evaluated drone
-    # plt.plot(COS_F.Leq[mic_number], haLAeq_1,'ob') # evaluated drone
-    # plt.plot(COS_F.Leq[mic_number], haLAeq_2,'ob') # evaluated drone
-    # plt.plot(COS_F.Leq[mic_number], haLAeq_3,'ob') # evaluated drone
+    y_min = haLAEq_0 # small drone line
+    y_max = haLAeq_2 # large drone line
+    y_mean = (y_max-y_min)*0.5 + y_min
     
     plt.axhline(50, color='green',linestyle=':',  label = '50%') # reference at 50%
+    plt.errorbar(COS_F.Leq[mic_number], y_mean, yerr=y_max-y_mean, 
+                 fmt='o',color='blue', capsize=5, capthick=2, label = r'estim. %HA')
+    
     plt.legend(fontsize=8,ncol=1)
-    plt.title('%HA curves for the noise of vehicles')
-    plt.xlabel(r'$LAE$')
+    plt.title('%HA curves for the noise of Drone on Flyover')
+    plt.xlabel(r'$LA_{eq}$')
     plt.ylabel('%HA')
+    plt.grid(True)
     plt.tight_layout()
 else: 
     print('no courves')

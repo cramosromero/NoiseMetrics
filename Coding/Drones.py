@@ -7,13 +7,16 @@ p_ref = 20e-6  # Reference pressure in Pascals
 """
 
 """
+# % UAM descriptive at recorded possition.
+#########################################
+
 class UAM_descriptive:
     """
     Main characterized UAM from recorded operation.
     This class is the blue print for basic noise characterization of a
     Drone Noise signal recorded at listener possition.
     """
-    def __init__(self, operation, data_rec, weight_curve ):
+    def __init__(self, operation, data_rec, weight_curve, t_value ):
         """
 
         Parameters
@@ -37,7 +40,7 @@ class UAM_descriptive:
         
         self.num_channels, self.DATA_raw, self.DATA_acu, self.time_vec  = self.raw_and_spl()
         self.Filt_DATA_raw = self.p_t_W_() # weigthed time-series
-        self.SPL, self.time_metrics, self.Leq, self.Lmax, self.LE, self.L10, self.L50, self.L90 = self.metrics()
+        self.SPL, self.time_metrics, self.Leq, self.Lmax, self.LE, self.L10, self.L50, self.L90 = self.metrics(t_int=t_value)
 
     ####### Instance method for separate data_recs from multichannel pressure and SPL  
     ##################################################################################
@@ -109,7 +112,7 @@ class UAM_descriptive:
     ######## Instance method for calculating metrics from acoustic pressure time-series
     ####################################################################################
 
-    def metrics(self, t_int = 0.125):
+    def metrics(self, t_int):
 
         """
         Parameters
@@ -138,7 +141,7 @@ class UAM_descriptive:
             if len(chunk_data) == 0:
                 break
             ch_data_time_sqr = chunk_data**2
-            # ch_data_time_sqr = utils.time_weighting(ch_data_time_sqr, self.fs, t_int) #Fast, slow or other
+            ch_data_time_sqr = utils.time_weighting(ch_data_time_sqr, self.fs, t_int) #Fast, slow or other
             p_rms = np.sqrt(np.mean(ch_data_time_sqr, axis=0))  # RMS of the signal pressure in the window
             SPL_chunk = 20 * np.log10(p_rms/ p_ref)  # SPL in decibels
             SPL.append(SPL_chunk)
@@ -209,3 +212,15 @@ class UAM_descriptive:
         signal = self.Filt_DATA_raw[:,channel]
         utils.n_octave_freq_bands(signal, self.fs, n_frac = 3, limits= limits)
         return
+    
+# % UAM Source Definition by Backpropagation
+#####################
+class UAM_definition(UAM_descriptive):
+    def __init__ (self, rad_deprop):
+        self.rad_deprop = rad_deprop 
+        self.radio_dec = self.show_radio ()
+    
+    def show_radio(self):
+        radio_dec = self.rad_deprop/100
+        
+        return radio_dec
