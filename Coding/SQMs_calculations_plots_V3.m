@@ -8,13 +8,15 @@ clc; clear all; close all;
 %% Load Signal to be assessed (mono .wav file)
 base_path = cd;
 dir_ref_sounds = [base_path filesep 'SQMsMatlab' filesep 'audio_files' filesep];
-mono_signal_label = 'Ed_M3_10_F05_Y_W_134351_1micro5.wav';
+mono_signal_label = 'Ed_M3_10_HH_N_C_122827_1micro5.wav';
 
 % load mono signal [Nx1]
 [signal.signal, signal.fs]=audioread([dir_ref_sounds mono_signal_label]);
 
 % cut signal last seconds
-signal.signal = signal.signal(2*signal.fs:25*signal.fs);
+if mono_signal_label(10)=='F'
+    signal.signal = signal.signal(2*signal.fs:25*signal.fs);
+end
 
 fieldtype = 'free-frontal'; % string (default: 'free-frontal'; or 'diffuse')
 time_skip = 350e-3;% time_skip, in seconds for statistical calculations (default: 304ms - avoids transient responses of the digital filters)
