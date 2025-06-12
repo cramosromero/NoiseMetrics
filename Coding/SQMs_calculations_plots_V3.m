@@ -411,12 +411,17 @@ EPNL = EPNL_FAR_Part36(signal.signal, signal.fs,... % input signal and sampling 
 %% Detectability and Discounted sound levels Lotinga_2025
 base_path = cd;
 dir_ref_sounds = [base_path filesep 'SQMsMatlab' filesep 'audio_files' filesep];
-Target = 'A_M300_F_2_L_CALBIN_Pa.wav';
+%Target = 'A_M300_F_2_L_CALBIN_Pa.wav';
 Masker = 'A1_CALBIN_Pa.wav';
 
-% load mono signal [Nx1]
-[signalTarget, sampleRateTarget]=audioread([dir_ref_sounds Target]);
+% load mono signal [Nx1] 
+% [signalTarget, sampleRateTarget]=audioread([dir_ref_sounds Target]);
 [signalMasker, sampleRateMasker]=audioread([dir_ref_sounds Masker]);
+
+% and reshape the data size.
+signalTarget = [signal.signal, signal.signal];
+sampleRateTarget = signal.fs;
+signalMasker = signalMasker(1:size(signalTarget,1), :);
 % detectDiscount = acousticDetectDiscount(signalTarget, sampleRateTarget, signalMasker,...
 %                                                  sampleRateMasker, [1,20],1, 1,...
 %                                                  0.5, [20,20000], 1);
