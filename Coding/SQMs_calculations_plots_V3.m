@@ -419,7 +419,9 @@ Masker = 'A1_CALBIN_Pa.wav';
 [signalMasker, sampleRateMasker]=audioread([dir_ref_sounds Masker]);
 
 % and reshape the data size.
-signalTarget = [signal.signal, signal.signal];
+if size(signalTarget,2) == 1
+    signalTarget = [signal.signal, signal.signal];
+end
 sampleRateTarget = signal.fs;
 signalMasker = signalMasker(1:size(signalTarget,1), :);
 % detectDiscount = acousticDetectDiscount(signalTarget, sampleRateTarget, signalMasker,...
